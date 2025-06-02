@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasaraneni Karthikeya | Data Science Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .gradient-bg {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+        }
+        .custom-shape-divider-bottom-1700000000 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+        .custom-shape-divider-bottom-1700000000 svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 100px;
+        }
+        .custom-shape-divider-bottom-1700000000 .shape-fill {
+            fill: #1E293B;
+        }
+        .dark .custom-shape-divider-bottom-1700000000 .shape-fill {
+            fill: #0F172A;
+        }
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 36px;
+            top: 64px;
+            height: calc(100% - 64px);
+            width: 2px;
+            background: #CBD5E1;
+        }
+        .dark .timeline-item:not(:last-child)::after {
+            background: #334155;
+        }
+        .skill-badge {
+            transition: all 0.3s ease;
+        }
+        .skill-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .data-point {
+            position: relative;
+        }
+        .data-point::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3b82f6;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .dark .data-point::after {
+            background: #8b5cf6;
+        }
+        /* Custom animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @keyframes bounceSlow {
+            0%, 100% { 
+                transform: translateY(-5%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            30% { transform: rotate(14deg); }
+            40% { transform: rotate(-4deg); }
+            50% { transform: rotate(10deg); }
+            60% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-fade-in { animation: fadeIn 1s ease-in; }
+        .animate-bounce-slow { animation: bounceSlow 2s infinite; }
+        .animate-wave { animation: wave 2s linear infinite; }
+        .animate-pulse-slow { animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+        /* Modal specific styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            backdrop-filter: blur(5px); /* Blur effect */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .dark .modal-content {
+            background-color: #1e293b;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #3b82f6;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <nav class="fixed w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#home" class="text-xl font-bold gradient-text animate-pulse-slow">K.Karthikeya</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="hover:text-blue-500 transition">Home</a>
+                    <a href="#about" class="hover:text-blue-500 transition">About</a>
+                    <a href="#skills" class="hover:text-blue-500 transition">Skills</a>
+                    <a href="#projects" class="hover:text-blue-500 transition">Projects</a>
+                    <a href="#education" class="hover:text-blue-500 transition">Education</a>
+                    <a href="#certifications" class="hover:text-blue-500 transition">Certifications</a>
+                    <a href="#contact" class="hover:text-blue-500 transition">Contact</a>
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                        <i class="fas fa-moon hidden dark:block"></i>
+                        <i class="fas fa-sun block dark:hidden"></i>
+                    </button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="p-2">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 pb-4 px-4 shadow-lg">
+            <div class="flex flex-col space-y-3">
+                <a href="#home" class="hover:text-blue-500 transition py-2">Home</a>
+                <a href="#about" class="hover:text-blue-500 transition py-2">About</a>
+                <a href="#skills" class="hover:text-blue-500 transition py-2">Skills</a>
+                <a href="#projects" class="hover:text-blue-500 transition py-2">Projects</a>
+                <a href="#education" class="hover:text-blue-500 transition py-2">Education</a>
+                <a href="#certifications" class="hover:text-blue-500 transition py-2">Certifications</a>
+                <a href="#contact" class="hover:text-blue-500 transition py-2">Contact</a>
+                <button id="theme-toggle-mobile" class="text-left hover:text-blue-500 transition py-2">
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex items-center pt-16 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 dark:from-blue-900/20 dark:via-purple-900/20 dark:to-pink-900/20"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="animate-fade-in">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        Hi, I'm <span class="gradient-text">Kasaraneni Karthikeya</span>
+                        <span class="inline-block animate-wave origin-[70%_70%]">👋</span>
+                    </h1>
+                    <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-gray-600 dark:text-gray-300">
+                        <span class="typing-text"></span>
+                    </h2>
+                    <p class="text-lg mb-8 text-gray-600 dark:text-gray-300">
+                        Enthusiastic and self-driven Computer Science undergraduate with a strong interest in Artificial Intelligence and Data Science. Passionate about building intelligent systems and real-time applications that solve real-world problems.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#contact" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 animate-bounce-slow">
+                            Hire Me
+                        </a>
+                        <a href="#projects" class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-full font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                            View Projects
+                        </a>
+                    </div>
+                    <div class="mt-8 flex space-x-4">
+                        <a href="https://www.linkedin.com/in/karthikeya-kasaraneni-a6b434284/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition" aria-label="LinkedIn Profile">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/kasaranenikarthikeya" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-800 hover:text-white transition" aria-label="GitHub Profile">
+                            <i class="fab fa-github"></i>
+                        </a>
+                         <a href="Kasaraneni_Karthikeya CV.docx" download class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-600 hover:text-white transition" aria-label="Download Resume">
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="w-64 h-64 md:w-80 md:h-80 mx-auto rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-1 animate-float">
+                        <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 overflow-hidden">
+                            <img src="https://media.licdn.com/dms/image/v2/D5603AQHB9ZNLUTJCFQ/profile-displayphoto-shrink_800_800/B56ZY6uY0lGcAc-/0/1744741964303?e=1754524800&v=beta&t=nXSq3tC2SF1XKtvCqDYY2Nfv46x4p8jJ6gLQZpjaKH0" 
+                                 alt="Kasaraneni Karthikeya" 
+                                 class="w-full h-full object-cover object-center">
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-yellow-400/20 blur-xl animate-pulse-slow"></div>
+                    <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-pink-400/20 blur-xl animate-pulse-slow"></div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 w-full">
+            <div class="custom-shape-divider-bottom-1700000000">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+                    <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+                    <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">About <span class="gradient-text">Me</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h3 class="text-2xl font-semibold mb-4">Who am I?</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        I'm <span class="font-medium text-blue-500 dark:text-purple-400">Kasaraneni Karthikeya</span>, an enthusiastic and self-driven Computer Science undergraduate with a strong interest in Artificial Intelligence and Data Science. I am passionate about building intelligent systems and real-time applications that solve real-world problems.
+                    </p>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        Seeking opportunities to contribute to impactful projects and further enhance technical and problem-solving skills. My goal is to leverage data-driven insights to solve real-world problems while continuously expanding my knowledge in the field.
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-center data-point">
+                            <i class="fas fa-university text-blue-500 mr-2"></i>
+                            <span>Lovely Professional University, Punjab</span>
+                        </div>
+                        <div class="flex items-center data-point">
+                            <i class="fas fa-graduation-cap text-blue-500 mr-2"></i>
+                            <span>B.Tech in Computer Science Engineering (Batch of 2027)</span>
+                        </div>
+                        <div class="flex items-center data-point">
+                            <i class="fas fa-star text-blue-500 mr-2"></i>
+                            <span>Current CGPA: 7.3/10</span>
+                        </div>
+                        <p class="text-sm italic text-gray-500 dark:text-gray-400 mt-4">
+                            "While academic scores are important, true mastery lies in the skills you cultivate and the problems you solve."
+                        </p>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 dark:bg-gray-600 p-4 rounded-lg text-center hover:shadow-md transition">
+                                <div class="text-3xl font-bold text-blue-500 mb-2">4+</div>
+                                <div class="text-gray-600 dark:text-gray-300">Projects Completed</div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-600 p-4 rounded-lg text-center hover:shadow-md transition">
+                                <div class="text-3xl font-bold text-purple-500 mb-2">8+</div>
+                                <div class="text-gray-600 dark:text-gray-300">Technical Skills</div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-600 p-4 rounded-lg text-center hover:shadow-md transition">
+                                <div class="text-3xl font-bold text-pink-500 mb-2">100%</div>
+                                <div class="text-gray-600 dark:text-gray-300">Dedication</div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-600 p-4 rounded-lg text-center hover:shadow-md transition">
+                                <div class="text-3xl font-bold text-green-500 mb-2">∞</div>
+                                <div class="text-gray-600 dark:text-gray-300">Learning Potential</div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-center">
+                            <a href="Kasaraneni_Karthikeya CV.docx" download class="inline-block px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:shadow-lg transition">
+                                Download CV <i class="fas fa-download ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">My <span class="gradient-text">Skills</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-xl font-semibold mb-6 text-center">Programming Languages</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-code text-blue-500 text-2xl mr-2"></i>
+                        <span>C/C++</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fab fa-python text-green-500 text-2xl mr-2"></i>
+                        <span>Python</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fab fa-java text-red-500 text-2xl mr-2"></i>
+                        <span>Java</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-xl font-semibold mb-6 text-center">Database</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-database text-blue-600 text-2xl mr-2"></i>
+                        <span>MySQL</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-database text-purple-600 text-2xl mr-2"></i>
+                        <span>PostgreSQL</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-xl font-semibold mb-6 text-center">AI/ML Tools</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-brain text-red-500 text-2xl mr-2"></i>
+                        <span>scikit-learn</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-table text-purple-500 text-2xl mr-2"></i>
+                        <span>Pandas</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-calculator text-blue-500 text-2xl mr-2"></i>
+                        <span>NumPy</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-chart-line text-green-500 text-2xl mr-2"></i>
+                        <span>Matplotlib</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-chart-area text-orange-500 text-2xl mr-2"></i>
+                        <span>Seaborn</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-semibold mb-6 text-center">Tools & Other Skills</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fab fa-git-alt text-orange-600 text-2xl mr-2"></i>
+                        <span>Git</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fab fa-github text-gray-800 dark:text-gray-200 text-2xl mr-2"></i>
+                        <span>GitHub</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-book text-blue-500 text-2xl mr-2"></i>
+                        <span>Jupyter Notebook</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-laptop-code text-purple-500 text-2xl mr-2"></i>
+                        <span>VS Code</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-network-wired text-green-500 text-2xl mr-2"></i>
+                        <span>Networking</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-server text-red-500 text-2xl mr-2"></i>
+                        <span>Virtualization</span>
+                    </div>
+                    <div class="skill-badge bg-white dark:bg-gray-700 px-6 py-3 rounded-full shadow-md flex items-center">
+                        <i class="fas fa-terminal text-yellow-500 text-2xl mr-2"></i>
+                        <span>BASH scripting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">My <span class="gradient-text">Projects</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-md project-card transition-all duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/FF5733/ffffff?text=F1+Predictor" 
+                             alt="F1 Race Predictor" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-semibold" data-project-title="F1 Race Predictor">F1 Race Predictor</h3>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/kasaranenikarthikeya/F1-Race-Predictor" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700" aria-label="GitHub for F1 Race Predictor">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 project-description">
+                            Developed a machine learning model to predict Formula 1 race outcomes using historical data, driver statistics, and track conditions. Focused on data preprocessing and feature engineering to enhance prediction accuracy.
+                        </p>
+                        <div class="flex flex-wrap gap-2 project-tech-stack">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs rounded-full">Python</span>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-xs rounded-full">Pandas</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs rounded-full">scikit-learn</span>
+                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs rounded-full">NumPy</span>
+                        </div>
+                        <button class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition enhance-description-btn">
+                            ✨ Enhance Description
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-md project-card transition-all duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Chat+App" 
+                             alt="ChitChat – WhatsApp-Like Real-Time Chat App" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-semibold" data-project-title="ChitChat – Real-Time Chat App">ChitChat – Real-Time Chat App</h3>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/kasaranenikarthikeya/ChitChat" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700" aria-label="GitHub for ChitChat">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 project-description">
+                            Developed a full-stack real-time chat app with login, group chat, and live messaging. Used WebSockets for real-time updates and PostgreSQL for storing chat data.
+                        </p>
+                        <div class="flex flex-wrap gap-2 project-tech-stack">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs rounded-full">React</span>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-xs rounded-full">Tailwind CSS</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs rounded-full">FastAPI</span>
+                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs rounded-full">WebSockets</span>
+                            <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 text-xs rounded-full">PostgreSQL</span>
+                        </div>
+                        <button class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition enhance-description-btn">
+                            ✨ Enhance Description
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-md project-card transition-all duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/8b5cf6/ffffff?text=Voice+Assistant" 
+                             alt="AI-Powered Chatbot (Voice Assistant)" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-semibold" data-project-title="AI-Powered Chatbot (Voice Assistant)">AI-Powered Chatbot (Voice Assistant)</h3>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/kasaranenikarthikeya/AI-Chatbot" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700" aria-label="GitHub for AI Chatbot">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 project-description">
+                            Built a voice-interactive assistant that responds intelligently to queries. Integrated speech-to-text and text-to-speech for smooth user interaction.
+                        </p>
+                        <div class="flex flex-wrap gap-2 project-tech-stack">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs rounded-full">Python</span>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-xs rounded-full">SpeechRecognition</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs rounded-full">Text-to-Speech</span>
+                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs rounded-full">NLP</span>
+                        </div>
+                        <button class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition enhance-description-btn">
+                            ✨ Enhance Description
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-md project-card transition-all duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/ec4899/ffffff?text=Travel+Guide" 
+                             alt="AI Travel Guide" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-semibold" data-project-title="AI Travel Guide">AI Travel Guide</h3>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/kasaranenikarthikeya/AI-Travel-Guide" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700" aria-label="GitHub for AI Travel Guide">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 project-description">
+                            Created a tool that shows famous places when a location is entered. Used Flask for UI and SQL to manage location data.
+                        </p>
+                        <div class="flex flex-wrap gap-2 project-tech-stack">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs rounded-full">Python</span>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-xs rounded-full">Flask</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs rounded-full">API Integration</span>
+                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs rounded-full">SQL</span>
+                        </div>
+                        <button class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition enhance-description-btn">
+                            ✨ Enhance Description
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-md project-card transition-all duration-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Credit+Risk" 
+                             alt="Credit Risk Prediction Model" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-semibold" data-project-title="Credit Risk Prediction Model">Credit Risk Prediction Model</h3>
+                            <div class="flex space-x-2">
+                                <a href="https://github.com/kasaranenikarthikeya/Credit-Risk-Prediction" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700" aria-label="GitHub for Credit Risk Prediction">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 project-description">
+                            Trained an ML model to classify customers by credit risk. Performed data cleaning, feature engineering, and evaluation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 project-tech-stack">
+                            <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs rounded-full">Python</span>
+                            <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 text-xs rounded-full">Pandas</span>
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs rounded-full">scikit-learn</span>
+                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 text-xs rounded-full">Excel</span>
+                        </div>
+                        <button class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition enhance-description-btn">
+                            ✨ Enhance Description
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="https://github.com/kasaranenikarthikeya" target="_blank" rel="noopener noreferrer" class="inline-block px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-full font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    View More Projects <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">My <span class="gradient-text">Education</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-8">
+                    <div class="timeline-item relative pl-20">
+                        <div class="absolute left-0 top-0 w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-graduation-cap text-xl"></i>
+                        </div>
+                        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-semibold">Bachelor of Technology – Computer Science and Engineering</h3>
+                                <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm">2027 (Expected)</span>
+                            </div>
+                            <h4 class="text-gray-600 dark:text-gray-300 font-medium mb-4">Lovely Professional University – Punjab</h4>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Currently pursuing my B.Tech with a CGPA of 7.3/10. Focused on Artificial Intelligence and Data Science.
+                            </p>
+                            <div class="mt-4">
+                                <span class="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-600 rounded-full text-sm mr-2">Data Structures & Algorithms</span>
+                                <span class="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-600 rounded-full text-sm mr-2">Operating Systems</span>
+                                <span class="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-600 rounded-full text-sm">DBMS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="certifications" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">My <span class="gradient-text">Certifications</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-8">
+                    <div class="timeline-item relative pl-20">
+                        <div class="absolute left-0 top-0 w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-certificate text-xl"></i>
+                        </div>
+                        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-semibold">Complete Python Programming</h3>
+                                <span class="bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-3 py-1 rounded-full text-sm">Coursera</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Gained comprehensive knowledge and practical skills in Python programming, covering fundamental to advanced concepts.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item relative pl-20">
+                        <div class="absolute left-0 top-0 w-16 h-16 bg-pink-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-desktop text-xl"></i>
+                        </div>
+                        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-semibold">Responsive Web Design</h3>
+                                <span class="bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 px-3 py-1 rounded-full text-sm">FreeCodeCamp</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                Mastered the principles of modern responsive web design, ensuring websites look great on any device.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 bg-gray-100 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Get In <span class="gradient-text">Touch</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto"></div>
+                <p class="text-lg text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+                    I'm currently seeking opportunities in Artificial Intelligence and Data Science. Feel free to reach out for collaborations or inquiries!
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-blue-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Email</h4>
+                                <p class="text-gray-600 dark:text-gray-300">kasaranenikarthikeya8@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-pink-100 dark:bg-pink-900/50 p-3 rounded-full mr-4">
+                                <i class="fas fa-map-marker-alt text-pink-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Location</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Lovely Professional University, Punjab, India</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="font-semibold mb-4">Connect With Me</h4>
+                        <div class="flex space-x-4">
+                            <a href="https://www.linkedin.com/in/karthikeya-kasaraneni-a6b434284/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition" aria-label="LinkedIn Profile">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://github.com/kasaranenikarthikeya" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-800 hover:text-white transition" aria-label="GitHub Profile">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-md">
+                        <p class="text-gray-700 dark:text-gray-300 mb-6">
+                            Have a project idea, a question, or just want to connect? Click the button below to send me an email directly!
+                        </p>
+                        <a href="mailto:kasaranenikarthikeya8@gmail.com?subject=Inquiry from your Portfolio Website&body=Hello Karthikeya," 
+                           class="w-full inline-block text-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold gradient-text mb-4">Kasaraneni Karthikeya</h3>
+                    <p class="mb-4">
+                        Enthusiastic Computer Science undergraduate passionate about building intelligent systems and real-time applications.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.linkedin.com/in/karthikeya-kasaraneni-a6b434284/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition" aria-label="LinkedIn Profile">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/kasaranenikarthikeya" target="_blank" rel="noopener noreferrer" class="hover:text-gray-400 transition" aria-label="GitHub Profile">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-blue-400 transition">Home</a></li>
+                        <li><a href="#about" class="hover:text-blue-400 transition">About</a></li>
+                        <li><a href="#skills" class="hover:text-blue-400 transition">Skills</a></li>
+                        <li><a href="#projects" class="hover:text-blue-400 transition">Projects</a></li>
+                        <li><a href="#education" class="hover:text-blue-400 transition">Education</a></li>
+                        <li><a href="#certifications" class="hover:text-blue-400 transition">Certifications</a></li>
+                        <li><a href="#contact" class="hover:text-blue-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Areas of Interest</h3>
+                    <ul class="space-y-2">
+                        <li><span class="inline-block px-3 py-1 bg-gray-700 rounded-full text-sm">Artificial Intelligence</span></li>
+                        <li><span class="inline-block px-3 py-1 bg-gray-700 rounded-full text-sm">Data Science</span></li>
+                        <li><span class="inline-block px-3 py-1 bg-gray-700 rounded-full text-sm">Real-time Applications</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p>&copy; 2023 Kasaraneni Karthikeya. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="project-modal" class="modal hidden">
+        <div class="modal-content dark:text-gray-100">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-project-title" class="text-2xl font-bold mb-4 gradient-text"></h3>
+            <div id="modal-project-description" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                </div>
+            <div id="modal-loader" class="loader hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', 
+                document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+        
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'dark' || 
+            (!localStorage.getItem('color-theme') && 
+            window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Typing animation
+        const typingText = document.querySelector('.typing-text');
+        // Updated professions based on the resume and user's request
+        const professions = ['Data Science Aspirant', 'AI Enthusiast', 'Problem Solver'];
+        let professionIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function type() {
+            const currentProfession = professions[professionIndex];
+            
+            if (isDeleting) {
+                typingText.textContent = currentProfession.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingText.textContent = currentProfession.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            if (!isDeleting && charIndex === currentProfession.length) {
+                isDeleting = true;
+                setTimeout(type, 1000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                professionIndex = (professionIndex + 1) % professions.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 50 : 150);
+            }
+        }
+        
+        // Start typing animation
+        setTimeout(type, 1000);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80, // Adjust for fixed header
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Animate skill badges on scroll
+        const skillBadges = document.querySelectorAll('.skill-badge');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 }); // Trigger when 10% of the item is visible
+
+        skillBadges.forEach(badge => {
+            badge.style.opacity = '0'; // Start invisible
+            badge.style.transform = 'translateY(20px)'; // Start slightly below
+            badge.style.transition = 'all 0.5s ease'; // Smooth transition
+            observer.observe(badge);
+        });
+
+        // Gemini API Integration: Project Description Enhancer
+        const projectModal = document.getElementById('project-modal');
+        const closeModalButton = document.querySelector('.close-button');
+        const modalProjectTitle = document.getElementById('modal-project-title');
+        const modalProjectDescription = document.getElementById('modal-project-description');
+        const modalLoader = document.getElementById('modal-loader');
+
+        document.querySelectorAll('.enhance-description-btn').forEach(button => {
+            button.addEventListener('click', async (event) => {
+                const projectCard = event.target.closest('.project-card');
+                const projectTitle = projectCard.querySelector('[data-project-title]').dataset.projectTitle;
+                const projectDescription = projectCard.querySelector('.project-description').textContent.trim();
+                const techStackElements = projectCard.querySelectorAll('.project-tech-stack span');
+                const techStack = Array.from(techStackElements).map(span => span.textContent.trim()).join(', ');
+
+                modalProjectTitle.textContent = projectTitle;
+                modalProjectDescription.innerHTML = ''; // Clear previous content
+                modalLoader.classList.remove('hidden'); // Show loader
+                projectModal.classList.remove('hidden'); // Show modal
+
+                const prompt = `Expand on the following project description, highlighting its significance and technical aspects, especially considering the listed tech stack. Make it sound professional and engaging for a potential employer.
+                Project Title: ${projectTitle}
+                Existing Description: ${projectDescription}
+                Tech Stack: ${techStack}`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will automatically provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const enhancedText = result.candidates[0].content.parts[0].text;
+                        modalProjectDescription.textContent = enhancedText;
+                    } else {
+                        modalProjectDescription.textContent = 'Could not generate an enhanced description. Please try again.';
+                        console.error('Gemini API response structure unexpected:', result);
+                    }
+                } catch (error) {
+                    modalProjectDescription.textContent = 'Failed to fetch enhanced description. Please check your network connection.';
+                    console.error('Error calling Gemini API:', error);
+                } finally {
+                    modalLoader.classList.add('hidden'); // Hide loader
+                }
+            });
+        });
+
+        // Close modal when close button is clicked
+        closeModalButton.addEventListener('click', () => {
+            projectModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside of the modal content
+        window.addEventListener('click', (event) => {
+            if (event.target === projectModal) {
+                projectModal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
